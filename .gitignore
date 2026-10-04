@@ -1,0 +1,10 @@
+node_modules/
+build/
+.env
+.env.local
+backend/node_modules/
+backend/uploads/*
+!backend/uploads/.gitkeep
+__pycache__/
+*.pyc
+.DS_Store

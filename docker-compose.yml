@@ -1,0 +1,33 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "5000:5000"
+    environment:
+      NODE_ENV: production
+      OCR_SERVICE_URL: http://ocr_service:5001
+    depends_on:
+      - ocr_service
+    restart: unless-stopped
+
+  ocr_service:
+    build:
+      context: ./ocr_service
+    ports:
+      - "5001:5001"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        REACT_APP_INTERNSHIP_SCRIPT_URL: ${REACT_APP_INTERNSHIP_SCRIPT_URL}
+        REACT_APP_AUTH_SCRIPT_URL: ${REACT_APP_AUTH_SCRIPT_URL}
+        REACT_APP_UPLOAD_URL: ${REACT_APP_UPLOAD_URL:-http://localhost:5000/upload-file}
+        REACT_APP_VERIFY_URL: ${REACT_APP_VERIFY_URL:-http://localhost:5000/api/verify-document}
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
